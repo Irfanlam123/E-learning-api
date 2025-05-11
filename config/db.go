@@ -27,6 +27,7 @@ func ConnectDB() *gorm.DB {
 		&models.Articles{},
 
 		&models.User{},
+		&models.Course{},
 	)
 	if err != nil {
 		log.Fatal("failed to migrate:", err)

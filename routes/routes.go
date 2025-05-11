@@ -20,6 +20,11 @@ func Article(e *echo.Echo, ArticleHandler *handlers.ArticleHandler) {
 	e.GET("/articles", ArticleHandler.GetAll())
 
 }
+func CourseRoute(e *echo.Echo, courseHandler *handlers.CourseHandler) {
+	e.POST("/course", courseHandler.Create())
+	e.GET("/courses", courseHandler.GetAll())
+
+}
 
 func UserRoutes(e *echo.Echo, userHandler *handlers.UserHandler) {
 
