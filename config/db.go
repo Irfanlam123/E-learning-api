@@ -22,15 +22,11 @@ func ConnectDB() *gorm.DB {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 	err = db.AutoMigrate(
-		&models.Patient{},
-		&models.DoctorList{},
-		&models.DoctorSchedule{},
-		&models.Appointment{},
+		&models.Teacher{},
+
 		&models.Articles{},
-		&models.Prescription{},
-		&models.Medication{},
+
 		&models.User{},
-		&models.Medicine{},
 	)
 	if err != nil {
 		log.Fatal("failed to migrate:", err)

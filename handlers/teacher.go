@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type IMedicineHandler interface {
+type ITeacher interface {
 	GetById() echo.HandlerFunc
 	Create() echo.HandlerFunc
 	Update() echo.HandlerFunc
@@ -19,18 +19,18 @@ type IMedicineHandler interface {
 	GetAll() echo.HandlerFunc
 }
 
-type MedicineHandler struct {
-	patient models.Medicine
-	repo    repository.IMedincineRepository
+type TeacherHandler struct {
+	teacher models.Teacher
+	repo    repository.ITeacherRepository
 }
 
-func NewMedicineHandler(repo repository.IMedincineRepository) *MedicineHandler {
-	return &MedicineHandler{
+func NewTeacherHandler(repo repository.ITeacherRepository) *TeacherHandler {
+	return &TeacherHandler{
 		repo: repo,
 	}
 }
 
-func (p *MedicineHandler) GetById() echo.HandlerFunc {
+func (p *TeacherHandler) GetById() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		idParam := c.Param("id")
 		id, err := strconv.Atoi(idParam)
@@ -39,7 +39,7 @@ func (p *MedicineHandler) GetById() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, "Invalid ID")
 		}
 
-		patient, err := p.repo.GetById(c.Request().Context(), uint(id))
+		patient, err := p.repo.GetByID(c.Request().Context(), uint(id))
 		if err != nil {
 			logrus.Error("Error getting patient: ", err)
 			return c.JSON(http.StatusInternalServerError, "Failed to get patient")
@@ -48,15 +48,15 @@ func (p *MedicineHandler) GetById() echo.HandlerFunc {
 	}
 }
 
-func (p *MedicineHandler) Create() echo.HandlerFunc {
+func (p *TeacherHandler) Create() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		patient := models.Medicine{}
+		patient := models.Teacher{}
 		id, _ := config.GenerateId()
 		patient.ID = id
 		if err := c.Bind(&patient); err != nil {
 			return c.JSON(http.StatusBadRequest, err)
 		}
-		err := p.repo.Create(c.Request().Context(), &patient)
+		err := p.repo.CreateTeacher(c.Request().Context(), &patient)
 		if err != nil {
 			logrus.Error("Error creating patient: ", err)
 			return c.JSON(http.StatusInternalServerError, "Failed to create patient")
@@ -65,7 +65,7 @@ func (p *MedicineHandler) Create() echo.HandlerFunc {
 	}
 }
 
-func (p *MedicineHandler) Update() echo.HandlerFunc {
+func (p *TeacherHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		idParam := c.Param("id")
 		id, err := strconv.Atoi(idParam)
@@ -74,11 +74,11 @@ func (p *MedicineHandler) Update() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, "Invalid ID")
 		}
 
-		patient := models.Medicine{}
+		patient := models.Teacher{}
 		if err := c.Bind(&patient); err != nil {
 			return c.JSON(http.StatusBadRequest, err)
 		}
-		err = p.repo.Update(c.Request().Context(), uint(id), &patient)
+		err = p.repo.UpdateTeacher(c.Request().Context(), uint(id), &patient)
 		if err != nil {
 			logrus.Error("Error updating patient: ", err)
 			return c.JSON(http.StatusInternalServerError, "Failed to update patient")
@@ -87,7 +87,7 @@ func (p *MedicineHandler) Update() echo.HandlerFunc {
 	}
 }
 
-func (p *MedicineHandler) Delete() echo.HandlerFunc {
+func (p *TeacherHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		idParam := c.Param("id")
 		id, err := strconv.Atoi(idParam)
@@ -96,7 +96,7 @@ func (p *MedicineHandler) Delete() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, "Invalid ID")
 		}
 
-		err = p.repo.Delete(c.Request().Context(), uint(id))
+		err = p.repo.DeleteTeacher(c.Request().Context(), uint(id))
 		if err != nil {
 			logrus.Error("Error deleting patient: ", err)
 			return c.JSON(http.StatusInternalServerError, "Failed to delete patient")
@@ -105,7 +105,7 @@ func (p *MedicineHandler) Delete() echo.HandlerFunc {
 	}
 }
 
-func (p *MedicineHandler) GetAll() echo.HandlerFunc {
+func (p *TeacherHandler) GetAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		result, err := p.repo.GetAll(c.Request().Context())
