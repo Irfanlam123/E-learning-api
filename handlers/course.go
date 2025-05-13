@@ -15,6 +15,7 @@ type ICourseHandler interface {
 	Create() echo.HandlerFunc
 	GetAll() echo.HandlerFunc
 	// Count() echo.HandlerFunc
+	GetByID() echo.HandlerFunc
 }
 
 type CourseHandler struct {
@@ -55,5 +56,16 @@ func (h *CourseHandler) GetAll() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get all courses"})
 		}
 		return c.JSON(http.StatusOK, courses)
+	}
+}
+func (h *CourseHandler) GetByID()echo.HandlerFunc{
+	return func(c echo.Context) error{
+	idParam := c.Param("id")
+		id, _ := strconv.Atoi(idParam)
+		result,err:=h.repo.GetByID(c.Request().Context(),uint(id))
+		if err!=nil{
+			return err
+		}
+		return c.JSON(http.StatusOK,result)
 	}
 }

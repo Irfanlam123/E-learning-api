@@ -10,6 +10,7 @@ import (
 type ICourseRepository interface {
 	Create(ctx context.Context, course *models.Course) error
 	GetAll(ctx context.Context) ([]models.Course, error)
+	GetByID(ctx context.Context, id uint) (models.Course, error)
 }
 
 type CourseRepository struct {
@@ -29,4 +30,11 @@ func (r *CourseRepository) GetAll(ctx context.Context) ([]models.Course, error) 
 	var courses []models.Course
 	err := r.db.WithContext(ctx).Find(&courses).Error
 	return courses, err
+}
+
+func (r *CourseRepository) GetByID(ctx context.Context, id uint) (models.Course, error) {
+	var course models.Course
+	err := r.db.WithContext(ctx).First(&course, id).Error
+	return course, err
+
 }
