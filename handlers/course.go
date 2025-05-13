@@ -5,6 +5,7 @@ import (
 	"doctor-on-demand/models"
 	repository "doctor-on-demand/repositories"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo"
@@ -58,14 +59,14 @@ func (h *CourseHandler) GetAll() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, courses)
 	}
 }
-func (h *CourseHandler) GetByID()echo.HandlerFunc{
-	return func(c echo.Context) error{
-	idParam := c.Param("id")
+func (h *CourseHandler) GetByID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		idParam := c.Param("id")
 		id, _ := strconv.Atoi(idParam)
-		result,err:=h.repo.GetByID(c.Request().Context(),uint(id))
-		if err!=nil{
+		result, err := h.repo.GetByID(c.Request().Context(), uint(id))
+		if err != nil {
 			return err
 		}
-		return c.JSON(http.StatusOK,result)
+		return c.JSON(http.StatusOK, result)
 	}
 }
